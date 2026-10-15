@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: zimsale
+      POSTGRES_USER: zimsale
+      POSTGRES_PASSWORD: zimsale
+    ports:
+      - "5432:5432"
+    volumes:
+      - zimsale-postgres:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/001-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zimsale -d zimsale"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  zimsale-postgres:
